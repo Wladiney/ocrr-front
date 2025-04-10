@@ -1,29 +1,29 @@
-# Imagem base com Node.js
-FROM node:18
+# Etapa 1: Construir a aplicação (imagem de build)
+FROM node:18 AS build
 
-# Diretório de trabalho dentro do container
+# Diretório de trabalho no container
 WORKDIR /app
 
-# Copiar apenas os arquivos de dependência para instalar mais rápido no cache
+# Copiar o package.json e package-lock.json para instalar as dependências
 COPY package*.json ./
 
-
 # Instalar dependências
-RUN npm install -g npm@11.3.0
+RUN npm install
 
-# Copiar o restante do projeto
+# Copiar o restante do código da aplicação
 COPY . .
 
-# Adicionar permissão correta para o diretório /app
-RUN chown -R node:node /app
+# Construir os arquivos para produção
+RUN npm run build
 
-# Define o usuário para o container (se não estiver rodando como root)
-USER node
+# Etapa 2: Servir a aplicação com um servidor leve (imagem de produção)
+FROM nginx:alpine
 
-# Expor a porta padrão do Vite
-EXPOSE 5173
+# Copiar os arquivos de build do container anterior para o diretório padrão do Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Comando para rodar o servidor de desenvolvimento
-CMD ["npm", "run", "dev", "--", "--host"]
+# Expor a porta 80 para o Nginx
+EXPOSE 80
 
-
+# Iniciar o Nginx
+CMD ["nginx", "-g", "daemon off;"]
