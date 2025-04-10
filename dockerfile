@@ -7,8 +7,9 @@ WORKDIR /app
 # Copiar apenas os arquivos de dependência para instalar mais rápido no cache
 COPY package*.json ./
 
+
 # Instalar dependências
-RUN npm install
+RUN npm install -g npm@11.3.0
 
 # Copiar o restante do projeto
 COPY . .
