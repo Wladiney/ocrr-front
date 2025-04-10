@@ -30,6 +30,10 @@ RUN mkdir -p /var/cache/nginx && \
     mkdir -p /var/cache/nginx/client_temp && \
     chown -R appuser:appuser /var/cache/nginx
 
+# Criar diretório para o PID e dar permissões para o usuário
+RUN mkdir -p /var/run/nginx && \
+    chown -R appuser:appuser /var/run/nginx
+
 # Copiar os arquivos de build do container anterior para o diretório padrão do Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
