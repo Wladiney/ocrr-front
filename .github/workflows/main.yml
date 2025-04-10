@@ -1,0 +1,21 @@
+name: Webhook Trigger on Commit to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  webhook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Call Webhook on Commit to Main
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+            -H "Authorization: Bearer ${{ secrets.WEBHOOK_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "${GITHUB_SHA}", "message": "Commit triggered webhook."}'
