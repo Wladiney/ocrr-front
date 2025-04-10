@@ -10,8 +10,11 @@ COPY package*.json ./
 # Instalar dependências
 RUN npm install
 
-# Copiar apenas o diretório src (código-fonte) e arquivos necessários
-COPY . .
+# Copiar o diretório src (código-fonte), index.html e arquivos necessários
+COPY src ./src
+COPY index.html .  # Certifique-se de que o arquivo index.html seja copiado
+COPY vite.config.js .
+COPY .env .
 
 # Construir os arquivos para produção
 RUN npm run build
@@ -24,6 +27,11 @@ RUN adduser -D -g '' appuser
 
 # Criar diretório de trabalho para o Nginx e dar permissão para o usuário
 RUN mkdir -p /usr/share/nginx/html && chown -R appuser:appuser /usr/share/nginx/html
+
+# Criar diretórios de cache do Nginx e dar permissões apropriadas
+RUN mkdir -p /var/cache/nginx && \
+    mkdir -p /var/cache/nginx/client_temp && \
+    chown -R appuser:appuser /var/cache/nginx
 
 # Copiar os arquivos de build do container anterior para o diretório padrão do Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
