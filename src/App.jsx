@@ -206,7 +206,7 @@ const processImage = async () => {
     formData.append('file', blob, 'cupom.jpg');
 
     // Enviar imagem para a API
-    const response = await fetch('http://lagoinhasm-ocrrr.qwyqnc.easypanel.host/extrair-valor/?debug=false', {
+    const response = await fetch('https://lagoinhasm-ocrrr.qwyqnc.easypanel.host/extrair-valor/?debug=false', {
       method: 'POST',
       body: formData,
     });
