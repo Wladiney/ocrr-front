@@ -11,10 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copiar o diretório src (código-fonte), index.html e arquivos necessários
-COPY src ./src
-COPY index.html .  # Certifique-se de que o arquivo index.html seja copiado
-COPY vite.config.js .
-COPY .env .
+COPY . .
 
 # Construir os arquivos para produção
 RUN npm run build
